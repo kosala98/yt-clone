@@ -15,16 +15,17 @@ import thumbnail13 from "../../assets/thumbnail13.jpg";
 import thumbnail14 from "../../assets/thumbnail14.jpg";
 import thumbnail15 from "../../assets/thumbnail15.jpg";
 import thumbnail16 from "../../assets/thumbnail16.jpg";
+import { Link } from "react-router-dom";
 
 const Feed = () => {
   return (
     <div className="feed">
-      <div className="card">
+      <Link to={`video/20/4521`} className="card">
         <img src={thumbnail1} alt="" />
         <h2>Best places to visit in 2023</h2>
         <h3>TravelBro</h3>
         <p>15k views &bull; 2 days ago</p>
-      </div>
+      </Link>
       <div className="card">
         <img src={thumbnail2} alt="" />
         <h2>USA current situation</h2>
