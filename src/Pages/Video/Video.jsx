@@ -1,7 +1,12 @@
+import PlayVideo from "../../Components/PlayVideo/PlayVideo";
 import "./Video.css";
 
 const Video = () => {
-  return <div></div>;
+  return (
+    <div className="play-container">
+      <PlayVideo />
+    </div>
+  );
 };
 
 export default Video;
