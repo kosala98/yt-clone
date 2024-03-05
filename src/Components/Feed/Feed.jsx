@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import "./Feed.css";
 import thumbnail1 from "../../assets/thumbnail1.png";
 import thumbnail2 from "../../assets/thumbnail2.png";
@@ -16,8 +17,21 @@ import thumbnail14 from "../../assets/thumbnail14.jpg";
 import thumbnail15 from "../../assets/thumbnail15.jpg";
 import thumbnail16 from "../../assets/thumbnail16.jpg";
 import { Link } from "react-router-dom";
+import { API_KEY } from "../../data";
 
-const Feed = () => {
+const Feed = ({ category }) => {
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    const videoList_url = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=US&videoCategoryId=${category}&key=${API_KEY} `;
+    await fetch(videoList_url)
+      .then((response) => response.json())
+      .then((data) => setData(data.items));
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [category]);
   return (
     <div className="feed">
       <Link to={`video/20/4521`} className="card">
