@@ -12,6 +12,8 @@ import moment from "moment";
 
 const PlayVideo = ({ videoId }) => {
   const [apiData, setApiData] = useState(null);
+  const [channelData, setChannelData] = useState(null);
+  const [commentData, setCommentData] = useState(null);
 
   const fetchVideoData = async () => {
     // Fetching Videos Data
@@ -21,9 +23,27 @@ const PlayVideo = ({ videoId }) => {
       .then((data) => setApiData(data.items[0]));
   };
 
+  const fetchOtherData = async () => {
+    // Fetching Channel Data
+    const channelData_url = `https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&id=${apiData.snippet.channelId}&key=${API_KEY}`;
+    await fetch(channelData_url)
+      .then((res) => res.json())
+      .then((data) => setChannelData(data.items[0]));
+
+    // Fetching Comment data
+    const comment_url = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&videoId=${videoId}&key=${API_KEY} `;
+    await fetch(comment_url)
+      .then((res) => res.json())
+      .then((data) => setCommentData(data.items));
+  };
+
   useEffect(() => {
     fetchVideoData();
   }, []);
+
+  useEffect(() => {
+    fetchOtherData();
+  }, [apiData]);
 
   return (
     <div className="play-video">
@@ -59,10 +79,18 @@ const PlayVideo = ({ videoId }) => {
       </div>
       <hr />
       <div className="publisher">
-        <img src={jack} alt="" />
+        <img
+          src={channelData ? channelData.snippet.thumbnails.default.url : ""}
+          alt=""
+        />
         <div>
           <p>{apiData ? apiData.snippet.channelTitle : "Channel Name"}</p>
-          <span>100k Subscribers</span>
+          <span>
+            {channelData
+              ? value_converter(channelData.statistics.subscriberCount)
+              : "1B"}{" "}
+            Subscribers
+          </span>
         </div>
         <button>Subscribe</button>
       </div>
@@ -77,48 +105,24 @@ const PlayVideo = ({ videoId }) => {
           {apiData ? value_converter(apiData.statistics.commentCount) : 120}{" "}
           Comments
         </h4>
-        <div className="comment">
-          <img src={user_profile} alt="" />
-          <div>
-            <h3>
-              Jack Nicholson <span>2 days ago</span>
-            </h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <div className="comment-action">
-              <img src={like} alt="" />
-              <span>250</span>
-              <img src={dislike} alt="" />
+        {commentData.map((item, index) => {
+          return (
+            <div key={index} className="comment">
+              <img src={user_profile} alt="" />
+              <div>
+                <h3>
+                  Jack Nicholson <span>2 days ago</span>
+                </h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                <div className="comment-action">
+                  <img src={like} alt="" />
+                  <span>250</span>
+                  <img src={dislike} alt="" />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="comment">
-          <img src={user_profile} alt="" />
-          <div>
-            <h3>
-              Jack Nicholson <span>2 days ago</span>
-            </h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <div className="comment-action">
-              <img src={like} alt="" />
-              <span>250</span>
-              <img src={dislike} alt="" />
-            </div>
-          </div>
-        </div>
-        <div className="comment">
-          <img src={user_profile} alt="" />
-          <div>
-            <h3>
-              Jack Nicholson <span>2 days ago</span>
-            </h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <div className="comment-action">
-              <img src={like} alt="" />
-              <span>250</span>
-              <img src={dislike} alt="" />
-            </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
     </div>
   );
