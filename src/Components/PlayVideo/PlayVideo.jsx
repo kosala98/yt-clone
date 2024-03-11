@@ -13,7 +13,7 @@ import moment from "moment";
 const PlayVideo = ({ videoId }) => {
   const [apiData, setApiData] = useState(null);
   const [channelData, setChannelData] = useState(null);
-  const [commentData, setCommentData] = useState(null);
+  const [commentData, setCommentData] = useState([]);
 
   const fetchVideoData = async () => {
     // Fetching Videos Data
@@ -31,7 +31,7 @@ const PlayVideo = ({ videoId }) => {
       .then((data) => setChannelData(data.items[0]));
 
     // Fetching Comment data
-    const comment_url = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&videoId=${videoId}&key=${API_KEY} `;
+    const comment_url = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&videoId=${videoId}&key=${API_KEY}`;
     await fetch(comment_url)
       .then((res) => res.json())
       .then((data) => setCommentData(data.items));
