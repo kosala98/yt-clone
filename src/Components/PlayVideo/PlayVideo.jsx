@@ -31,7 +31,7 @@ const PlayVideo = ({ videoId }) => {
       .then((data) => setChannelData(data.items[0]));
 
     // Fetching Comment data
-    const comment_url = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&videoId=${videoId}&key=${API_KEY}`;
+    const comment_url = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=50&videoId=${videoId}&key=${API_KEY}`;
     await fetch(comment_url)
       .then((res) => res.json())
       .then((data) => setCommentData(data.items));
@@ -108,15 +108,23 @@ const PlayVideo = ({ videoId }) => {
         {commentData.map((item, index) => {
           return (
             <div key={index} className="comment">
-              <img src={user_profile} alt="" />
+              <img
+                src={item.snippet.topLevelComment.snippet.authorProfileImageUrl}
+                alt=""
+              />
               <div>
                 <h3>
-                  Jack Nicholson <span>2 days ago</span>
+                  {item.snippet.topLevelComment.snippet.authorDisplayName}{" "}
+                  <span>2 days ago</span>
                 </h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                <p>{item.snippet.topLevelComment.snippet.textDisplay}</p>
                 <div className="comment-action">
                   <img src={like} alt="" />
-                  <span>250</span>
+                  <span>
+                    {value_converter(
+                      item.snippet.topLevelComment.snippet.likeCount
+                    )}
+                  </span>
                   <img src={dislike} alt="" />
                 </div>
               </div>
